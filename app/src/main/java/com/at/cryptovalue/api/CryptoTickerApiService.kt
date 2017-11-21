@@ -8,5 +8,4 @@ interface CryptoTickerApiService {
 
     @GET("ticker/?limit=200")
     fun getTop200Cryptos(): Observable<ArrayList<CryptoTicker>>
-
 }

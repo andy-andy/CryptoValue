@@ -11,8 +11,9 @@ import javax.inject.Singleton
 @Module
 class NetworkModule {
 
-    @Provides @Singleton
-    internal fun providesRetrofit(): CryptoTickerApiService? {
+    @Provides
+    @Singleton
+    internal fun providesCryptoTickerApiService(): CryptoTickerApiService {
         val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -20,5 +21,4 @@ class NetworkModule {
                 .build()
         return retrofit.create(CryptoTickerApiService::class.java)
     }
-
 }
