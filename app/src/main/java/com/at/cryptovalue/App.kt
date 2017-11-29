@@ -8,7 +8,7 @@ import com.at.cryptovalue.di.DaggerApplicationComponent
 class App : Application() {
 
     companion object {
-        //platformStatic allow access it from java code
+        // platformStatic allow access it from java code
         @JvmStatic lateinit var appComponentGraph: ApplicationComponent
     }
 

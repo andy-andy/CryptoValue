@@ -1,7 +1,6 @@
 package com.at.cryptovalue
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -10,17 +9,21 @@ import android.view.Menu
 import android.view.MenuItem
 import com.at.cryptovalue.adapter.CryptoRecyclerViewAdapter
 import com.at.cryptovalue.api.CryptoTickerApiService
-
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import rx.subscriptions.Subscriptions
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
     @Inject internal lateinit var cryptoTickerApiService: CryptoTickerApiService
 
     private lateinit var linearLayoutManager: LinearLayoutManager
+
+    var subscription = Subscriptions.empty()
+
+    val adapter = CryptoRecyclerViewAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,23 +36,18 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
 
-        val resultTop200Cryptos = cryptoTickerApiService.getTop200Cryptos()
+        updateCryptoData()
 
-        resultTop200Cryptos
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({ result ->
-                    Log.d("Result", "There are $result Cryptos in the list")
-                    recyclerView.adapter = CryptoRecyclerViewAdapter(result)
-                }, { error ->
-                    error.printStackTrace()
-                })
+        swipe_refresh.setOnRefreshListener({
+            updateCryptoData()
+        })
+    }
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+    override fun onPause() {
+        super.onPause()
+        subscription.unsubscribe()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -67,4 +65,16 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun updateCryptoData() {
+        swipe_refresh.isRefreshing = true
+        subscription = cryptoTickerApiService.getTop200Cryptos()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d("Result", "There are $it Cryptos in the list")
+                    adapter.data = it
+                    swipe_refresh.isRefreshing = false
+                }, { it.printStackTrace() })
+    }
+
 }

@@ -8,12 +8,17 @@ import com.at.cryptovalue.R
 import com.at.cryptovalue.model.CryptoTicker
 import kotlinx.android.synthetic.main.crypto_ticker_item_view.view.*
 
-class CryptoRecyclerViewAdapter(val cryptoTickers: ArrayList<CryptoTicker>) :
-        RecyclerView.Adapter<CryptoRecyclerViewAdapter.CryptoHolder>() {
+class CryptoRecyclerViewAdapter : RecyclerView.Adapter<CryptoRecyclerViewAdapter.CryptoHolder>() {
 
-    override fun getItemCount() = cryptoTickers.size
+    var data: ArrayList<CryptoTicker> = arrayListOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
-    override fun onBindViewHolder(holder: CryptoRecyclerViewAdapter.CryptoHolder, position: Int) = holder.bind(cryptoTickers[position])
+    override fun getItemCount() = data.size
+
+    override fun onBindViewHolder(holder: CryptoRecyclerViewAdapter.CryptoHolder, position: Int) = holder.bind(data[position])
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoRecyclerViewAdapter.CryptoHolder {
         val inflatedView = parent.inflate(R.layout.crypto_ticker_item_view, false)
@@ -25,7 +30,6 @@ class CryptoRecyclerViewAdapter(val cryptoTickers: ArrayList<CryptoTicker>) :
             tickerName.text = item.name
             tickerSymbol.text = item.symbol
             tickerPriceUsd.text = item.price_usd
-//            setOnClickListener { listener(item) }
         }
     }
 
