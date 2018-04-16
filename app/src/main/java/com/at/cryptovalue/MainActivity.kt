@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.at.cryptovalue.adapter.CryptoRecyclerViewAdapter
@@ -19,8 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject internal lateinit var cryptoTickerApiService: CryptoTickerApiService
 
-    private lateinit var linearLayoutManager: LinearLayoutManager
-
     var subscription = Subscriptions.empty()
 
     val adapter = CryptoRecyclerViewAdapter()
@@ -32,8 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        linearLayoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
@@ -71,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         subscription = cryptoTickerApiService.getTop200Cryptos()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("Result", "There are $it Cryptos in the list")
                     adapter.data = it
                     swipe_refresh.isRefreshing = false
                 }, { it.printStackTrace() })

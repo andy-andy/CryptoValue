@@ -8,7 +8,7 @@ import com.at.cryptovalue.di.DaggerApplicationComponent
 class App : Application() {
 
     companion object {
-        // platformStatic allow access it from java code
+        // Platform static. Allow access it from java code
         @JvmStatic lateinit var appComponentGraph: ApplicationComponent
     }
 
@@ -17,7 +17,5 @@ class App : Application() {
         appComponentGraph = DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule(this))
                 .build()
-
-        appComponentGraph.inject(this)
     }
 }

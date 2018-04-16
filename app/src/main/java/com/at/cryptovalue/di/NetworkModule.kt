@@ -1,4 +1,4 @@
-package com.at.cryptovalue
+package com.at.cryptovalue.di
 
 import android.content.Context
 import com.at.cryptovalue.api.CryptoTickerApiService
