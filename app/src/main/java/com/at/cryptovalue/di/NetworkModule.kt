@@ -17,7 +17,7 @@ class NetworkModule {
 
     @Provides @Singleton
     fun providesClient(context: Context): OkHttpClient {
-        val cacheSize: Long = 10 * 1024 * 1024 // 10 MiB
+        val cacheSize: Long = 10 * 1024 * 1024 // 10 MB
         return OkHttpClient.Builder().cache(Cache(context.cacheDir, cacheSize)).build()
     }
 
