@@ -1,4 +1,4 @@
-package com.at.cryptovalue
+package com.at.cryptovalue.root
 
 import android.app.Application
 import com.at.cryptovalue.di.ApplicationComponent

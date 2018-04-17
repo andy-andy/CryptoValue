@@ -1,6 +1,6 @@
 package com.at.cryptovalue.di
 
-import com.at.cryptovalue.App
+import com.at.cryptovalue.root.App
 import com.at.cryptovalue.MainActivity
 import dagger.Component
 import javax.inject.Singleton

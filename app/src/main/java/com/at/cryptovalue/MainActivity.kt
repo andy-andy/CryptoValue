@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.at.cryptovalue.adapter.CryptoRecyclerViewAdapter
 import com.at.cryptovalue.api.CryptoTickerApiService
+import com.at.cryptovalue.root.App
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.Subscriptions
