@@ -17,7 +17,5 @@ class App : Application() {
         appComponentGraph = DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule(this))
                 .build()
-
-        appComponentGraph.inject(this)
     }
 }
