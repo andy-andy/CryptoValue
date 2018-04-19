@@ -3,6 +3,7 @@ package com.at.cryptovalue
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    @Inject internal lateinit var cryptoTickerApiService: CryptoTickerApiService
+    @Inject
+    internal lateinit var cryptoTickerApiService: CryptoTickerApiService
 
     var subscription = Subscriptions.empty()
 
@@ -30,9 +32,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        //Layout manager
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+        //Item animator
         recyclerView.itemAnimator = DefaultItemAnimator()
+        //Item divider
+        val dividerItemDecoration = DividerItemDecoration(this, layoutManager.orientation)
+        dividerItemDecoration.setDrawable(this.getDrawable(R.drawable.item_divider))
+        recyclerView.addItemDecoration(dividerItemDecoration)
+        //Set fixed size
         recyclerView.setHasFixedSize(true)
+        //Set new adapter
         recyclerView.adapter = adapter
 
         updateCryptoData()
@@ -72,5 +83,4 @@ class MainActivity : AppCompatActivity() {
                     swipe_refresh.isRefreshing = false
                 }, { it.printStackTrace() })
     }
-
 }
