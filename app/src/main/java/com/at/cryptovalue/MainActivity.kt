@@ -1,5 +1,6 @@
 package com.at.cryptovalue
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
@@ -7,6 +8,9 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import com.at.cryptovalue.Utilities.EXTRA_DETAILS_NAME
+import com.at.cryptovalue.Utilities.EXTRA_DETAILS_PRICE
+import com.at.cryptovalue.Utilities.EXTRA_DETAILS_SYMBOL
 import com.at.cryptovalue.adapter.CryptoRecyclerViewAdapter
 import com.at.cryptovalue.api.CryptoTickerApiService
 import com.at.cryptovalue.root.App
@@ -22,8 +26,6 @@ class MainActivity : AppCompatActivity() {
     internal lateinit var cryptoTickerApiService: CryptoTickerApiService
 
     var subscription = Subscriptions.empty()
-
-    val adapter = CryptoRecyclerViewAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +45,23 @@ class MainActivity : AppCompatActivity() {
         recyclerView.addItemDecoration(dividerItemDecoration)
         //Set fixed size
         recyclerView.setHasFixedSize(true)
+
+        //RecyclerView onClick
+        val adapter = CryptoRecyclerViewAdapter { item ->
+            val coinDetailsIntent = Intent(this, CoinDetailsActivity::class.java)
+            coinDetailsIntent.putExtra(EXTRA_DETAILS_NAME, item.name)
+            coinDetailsIntent.putExtra(EXTRA_DETAILS_SYMBOL, item.symbol)
+            coinDetailsIntent.putExtra(EXTRA_DETAILS_PRICE, item.price_usd)
+            startActivity(coinDetailsIntent)
+        }
+
         //Set new adapter
         recyclerView.adapter = adapter
 
-        updateCryptoData()
+        updateCryptoData(adapter)
 
         swipe_refresh.setOnRefreshListener({
-            updateCryptoData()
+            updateCryptoData(adapter)
         })
     }
 
@@ -74,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun updateCryptoData() {
+    fun updateCryptoData(adapter: CryptoRecyclerViewAdapter) {
         swipe_refresh.isRefreshing = true
         subscription = cryptoTickerApiService.getTop200Cryptos()
                 .observeOn(AndroidSchedulers.mainThread())
