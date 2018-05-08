@@ -8,7 +8,7 @@ import com.at.cryptovalue.R
 import com.at.cryptovalue.model.CryptoTicker
 import kotlinx.android.synthetic.main.crypto_ticker_item_view.view.*
 
-class CryptoRecyclerViewAdapter : RecyclerView.Adapter<CryptoRecyclerViewAdapter.CryptoHolder>() {
+class CryptoRecyclerViewAdapter(val itemClick: (CryptoTicker) -> Unit) : RecyclerView.Adapter<CryptoRecyclerViewAdapter.CryptoHolder>() {
 
     var data: ArrayList<CryptoTicker> = arrayListOf()
         set(value) {
@@ -22,14 +22,16 @@ class CryptoRecyclerViewAdapter : RecyclerView.Adapter<CryptoRecyclerViewAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoRecyclerViewAdapter.CryptoHolder {
         val inflatedView = parent.inflate(R.layout.crypto_ticker_item_view, false)
-        return CryptoHolder(inflatedView)
+        return CryptoHolder(inflatedView, itemClick)
     }
 
-    class CryptoHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class CryptoHolder(v: View, val itemClick: (CryptoTicker) -> Unit) : RecyclerView.ViewHolder(v) {
         fun bind(item: CryptoTicker) = with(itemView) {
             tickerName.text = item.name
             tickerSymbol.text = item.symbol
             tickerPriceUsd.text = item.price_usd
+
+            itemView.setOnClickListener { itemClick(item) }
         }
     }
 

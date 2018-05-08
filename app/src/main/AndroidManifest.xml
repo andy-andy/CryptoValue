@@ -22,6 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CoinDetailsActivity"
+            android:label="@string/coin_details">
+        </activity>
     </application>
 
 </manifest>
