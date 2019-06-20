@@ -1,4 +1,4 @@
-package com.at.cryptovalue.Utilities
+package com.at.cryptovalue.utilities
 
 const val EXTRA_DETAILS_NAME = "details_name"
 

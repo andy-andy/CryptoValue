@@ -7,5 +7,5 @@ import rx.Observable
 interface CryptoTickerApiService {
 
     @GET("ticker/?limit=200")
-    fun getTop200Cryptos(): Observable<ArrayList<CryptoTicker>>
+    fun getTop200Coins(): Observable<ArrayList<CryptoTicker>>
 }

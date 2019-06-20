@@ -21,13 +21,13 @@
 
         <TextView
             android:id="@+id/tickerName"
+            android:text="@{item.name}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:paddingStart="5dp"
             android:paddingTop="5dp"
             android:paddingEnd="5dp"
-            android:text="@{item.name}"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="#000000"
             android:textSize="15sp"
@@ -40,26 +40,26 @@
 
             <TextView
                 android:id="@+id/tickerSymbol"
+                android:text="@{item.symbol}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:text="@{item.symbol}"
                 android:textColor="#000000"
                 android:textSize="12sp"
                 tools:text="Crypto Symbol" />
 
             <TextView
                 android:id="@+id/tickerPriceUsd"
+                android:text="@{item.price_usd}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:text="@{item.price_usd}"
                 android:textColor="#000000"
                 android:textSize="12sp"
                 tools:text="Crypto Price USD" />

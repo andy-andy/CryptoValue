@@ -1,42 +1,44 @@
 package com.at.cryptovalue.adapter
 
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.content.Intent
+import android.os.Bundle
+import androidx.core.content.ContextCompat.startActivity
+import androidx.recyclerview.widget.DiffUtil
+import com.at.cryptovalue.CoinDetailsActivity
 import com.at.cryptovalue.R
 import com.at.cryptovalue.model.CryptoTicker
-import kotlinx.android.synthetic.main.crypto_ticker_item_view.view.*
+import com.at.cryptovalue.utilities.EXTRA_DETAILS_NAME
+import com.at.cryptovalue.utilities.EXTRA_DETAILS_PRICE
+import com.at.cryptovalue.utilities.EXTRA_DETAILS_SYMBOL
 
-class CryptoRecyclerViewAdapter(val itemClick: (CryptoTicker) -> Unit) : RecyclerView.Adapter<CryptoRecyclerViewAdapter.CryptoHolder>() {
+class CryptoRecyclerViewAdapter : DataBindingAdapter<CryptoTicker>(DiffCallback()) {
 
-    var data: ArrayList<CryptoTicker> = arrayListOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
+    class DiffCallback : DiffUtil.ItemCallback<CryptoTicker>() {
+        override fun areContentsTheSame(oldItem: CryptoTicker, newItem: CryptoTicker): Boolean {
+            return oldItem == newItem
         }
 
-    override fun getItemCount() = data.size
-
-    override fun onBindViewHolder(holder: CryptoRecyclerViewAdapter.CryptoHolder, position: Int) = holder.bind(data[position])
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoRecyclerViewAdapter.CryptoHolder {
-        val inflatedView = parent.inflate(R.layout.crypto_ticker_item_view, false)
-        return CryptoHolder(inflatedView, itemClick)
-    }
-
-    class CryptoHolder(v: View, val itemClick: (CryptoTicker) -> Unit) : RecyclerView.ViewHolder(v) {
-        fun bind(item: CryptoTicker) = with(itemView) {
-            tickerName.text = item.name
-            tickerSymbol.text = item.symbol
-            tickerPriceUsd.text = item.price_usd
-
-            itemView.setOnClickListener { itemClick(item) }
+        override fun areItemsTheSame(oldItem: CryptoTicker, newItem: CryptoTicker): Boolean {
+            return oldItem.id == newItem.id
         }
     }
 
+    override fun onBindViewHolder(holder: DataBindingViewHolder<CryptoTicker>, position: Int) {
+        super.onBindViewHolder(holder, position)
+
+        holder.itemView.setOnClickListener {
+            val coinDetailsIntent = Intent(it.context, CoinDetailsActivity::class.java)
+
+            val bundle = Bundle()
+            bundle.putString(EXTRA_DETAILS_NAME, getItem(position).name)
+            bundle.putString(EXTRA_DETAILS_SYMBOL, getItem(position).symbol)
+            bundle.putString(EXTRA_DETAILS_PRICE, getItem(position).price_usd)
+            coinDetailsIntent.putExtras(bundle)
+            // Start coin details activity
+            startActivity(it.context, coinDetailsIntent, null)
+        }
+    }
+
+    override fun getItemViewType(position: Int) = R.layout.crypto_ticker_item_view
 }
 
-private fun ViewGroup.inflate(recycler_crypto_item_view: Int, b: Boolean): View {
-    return LayoutInflater.from(context).inflate(recycler_crypto_item_view, this, b)
-}
