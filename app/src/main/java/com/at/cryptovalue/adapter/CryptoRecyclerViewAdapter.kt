@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
-import com.at.cryptovalue.CoinDetailsActivity
 import com.at.cryptovalue.R
 import com.at.cryptovalue.model.CryptoTicker
 import com.at.cryptovalue.utilities.EXTRA_DETAILS_NAME
 import com.at.cryptovalue.utilities.EXTRA_DETAILS_PRICE
 import com.at.cryptovalue.utilities.EXTRA_DETAILS_SYMBOL
+import com.at.cryptovalue.view.CoinDetailsActivity
 
 class CryptoRecyclerViewAdapter : DataBindingAdapter<CryptoTicker>(DiffCallback()) {
 

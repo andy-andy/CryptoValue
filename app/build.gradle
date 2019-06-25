@@ -30,7 +30,7 @@ android {
 
 ext {
     supportLibraryVersion = '28.0.0'
-    retrofitVersion = '2.4.0'
+    retrofitVersion = '2.5.0'
     daggerVersion = '2.22.1'
     roomVersion = '1.1.0-rc1'
 }
@@ -55,6 +55,7 @@ dependencies {
     //
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     //
@@ -83,6 +84,18 @@ dependencies {
     //
     // Room
     //
-    implementation 'androidx.room:room-runtime:2.0.0'
-    kapt 'androidx.room:room-compiler:2.0.0'
+    implementation 'androidx.room:room-runtime:2.1.0'
+    kapt 'androidx.room:room-compiler:2.1.0'
+
+    //
+    // Co-routines
+    //
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
+
+    //
+    // Lifecycle
+    //
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 }
