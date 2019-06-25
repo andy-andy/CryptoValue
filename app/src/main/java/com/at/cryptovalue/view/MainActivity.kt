@@ -1,36 +1,40 @@
-package com.at.cryptovalue
+package com.at.cryptovalue.view
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.at.cryptovalue.R
 import com.at.cryptovalue.adapter.CryptoRecyclerViewAdapter
-import com.at.cryptovalue.api.CryptoTickerApiService
-import com.at.cryptovalue.root.App
+import com.at.cryptovalue.viewmodel.MainViewModel
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.Subscriptions
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    internal lateinit var cryptoTickerApiService: CryptoTickerApiService
+    private lateinit var mainViewModel: MainViewModel
 
-    private var subscription = Subscriptions.empty()
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        App.appComponentGraph.inject(this)
 
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        //Layout manager
+        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+
+        // Layout manager
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        //Item animator
+        // Item animator
         recyclerView.itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator()
         //Item divider
         val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(this, layoutManager.orientation)
@@ -39,19 +43,14 @@ class MainActivity : AppCompatActivity() {
         //Set fixed size
         recyclerView.setHasFixedSize(true)
 
-        val mAdapter = CryptoRecyclerViewAdapter()
-        recyclerView.adapter = mAdapter
+        val adapter = CryptoRecyclerViewAdapter()
+        recyclerView.adapter = adapter
 
-        updateCryptoData(mAdapter)
+        updateCryptoData(adapter)
 
         swipe_refresh.setOnRefreshListener {
-            updateCryptoData(mAdapter)
+            updateCryptoData(adapter)
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        subscription.unsubscribe()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -70,13 +69,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun updateCryptoData(adapter: CryptoRecyclerViewAdapter) {
+    private fun updateCryptoData(adapter: CryptoRecyclerViewAdapter) {
         swipe_refresh.isRefreshing = true
-        subscription = cryptoTickerApiService.getTop200Coins()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    it?.let(adapter::submitList)
-                    swipe_refresh.isRefreshing = false
-                }, { it.printStackTrace() })
+        mainViewModel.allCryptoTickers.observe(this, Observer { cryptoTickerList ->
+            cryptoTickerList?.let {
+                it.let(adapter::submitList)
+                swipe_refresh.isRefreshing = false
+            }
+        })
     }
 }

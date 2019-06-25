@@ -1,16 +1,15 @@
 package com.at.cryptovalue.di
 
-import android.content.Context
+import com.at.cryptovalue.App
 import com.at.cryptovalue.api.CryptoTickerApiService
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import rx.schedulers.Schedulers
 import javax.inject.Singleton
 
 @Module
@@ -25,10 +24,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun providesClient(context: Context, httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun providesClient(app: App, httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val cacheSize: Long = 10 * 1024 * 1024 // 10 MB
         return OkHttpClient.Builder()
-                .cache(Cache(context.cacheDir, cacheSize))
+                .cache(Cache(app.cacheDir, cacheSize))
                 .addNetworkInterceptor(httpLoggingInterceptor)
                 .build()
     }
@@ -38,7 +37,7 @@ class NetworkModule {
     fun providesRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
                 .client(client)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl("https://api.coinmarketcap.com/v1/")
                 .build()
@@ -49,5 +48,4 @@ class NetworkModule {
     internal fun providesCryptoTickerApiService(retrofit: Retrofit): CryptoTickerApiService {
         return retrofit.newBuilder().build().create(CryptoTickerApiService::class.java)
     }
-
 }
