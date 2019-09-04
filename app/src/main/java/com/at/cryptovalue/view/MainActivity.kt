@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator()
         //Item divider
         val dividerItemDecoration = androidx.recyclerview.widget.DividerItemDecoration(this, layoutManager.orientation)
-        dividerItemDecoration.setDrawable(this.getDrawable(R.drawable.item_divider))
+        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.item_divider, null))
         recyclerView.addItemDecoration(dividerItemDecoration)
         //Set fixed size
         recyclerView.setHasFixedSize(true)
